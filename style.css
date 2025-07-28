@@ -1,0 +1,138 @@
+/* Reset & base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: #f5f7fb;
+  color: #2d2d2d;
+  line-height: 1.6;
+}
+
+/* Navbar */
+header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4a6fa5;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #4a6fa5;
+  font-weight: 500;
+}
+
+nav ul li a:hover {
+  color: #1f4068;
+}
+
+/* Hero section */
+.hero {
+  background: linear-gradient(135deg, #dfe9f3, #ffffff);
+  text-align: center;
+  padding: 6rem 2rem;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #1f4068;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+/* Features section */
+#features {
+  padding: 4rem 2rem;
+  background: #ffffff;
+  text-align: center;
+}
+
+#features h2 {
+  font-size: 2rem;
+  color: #1f4068;
+  margin-bottom: 2rem;
+}
+
+#features ul {
+  list-style: none;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#features li {
+  font-size: 1.1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Download section */
+#download {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: #f0f4ff;
+}
+
+#download h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #1f4068;
+}
+
+.download-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #4a6fa5;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: #1f4068;
+}
+
+/* Footer */
+footer {
+  background: #1f4068;
+  color: #ffffff;
+  text-align: center;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+footer p {
+  margin: 0.5rem 0;
+}
