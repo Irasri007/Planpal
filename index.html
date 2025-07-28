@@ -1,24 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>📚 Study Schedule Generator</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/css/style.css" />
+
 </head>
 <body>
-  <h1>📚 Study Schedule Generator</h1>
-  <p>
-    A smart desktop app for students to automatically generate a personalized study schedule before exams.
-  </p>
 
-  <div class="screenshot">
-    <img src="screenshot.png" alt="App Screenshot">
+  <!-- Navbar -->
+  <header>
+    <nav>
+      <div class="logo">📚 Study Planner</div>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#download">Download</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Study Schedule Generator</h1>
+    <p>A smart desktop app for students to automatically generate a personalized study plan before exams.</p>
+  </section>
+
+  <!-- Screenshot Section -->
+  <div class="screenshot" style="text-align: center; margin-top: 2rem;">
+    <img src="screenshot.png" alt="App Screenshot" style="width: 90%; max-width: 500px; border-radius: 12px; box-shadow: 0 0 12px #ccc;" />
   </div>
 
-  <a class="button" href="main.exe" download>⬇ Download App for Windows</a>
+  <!-- Features Section -->
+  <section id="features">
+    <h2>Features</h2>
+    <ul>
+      <li>🎯 Personalized study schedules based on your subjects</li>
+      <li>⏰ Time slot optimization for effective revision</li>
+      <li>📅 Automatically avoids overlapping tasks</li>
+      <li>📊 Easy-to-understand layout of daily plans</li>
+    </ul>
+  </section>
 
-  <footer>
-    Made with ❤️ by Iraa Srivastava
-  </footer>
+  <!-- Download Section -->
+  <section id="download">
+    <h2>Download the App</h2>
+    <a class="download-button" href="main.exe" download>⬇ Download for Windows</a>
+  </section>
+
 </body>
 </html>
