@@ -1,108 +1,129 @@
 import tkinter as tk
+from tkinter import messagebox
+from datetime import datetime, timedelta
+import threading
 
-root = tk.Tk()
-root.title("Study Schedule Generator")
-root.geometry("600x600")
+class StudyScheduleApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Study Schedule Generator")
+        self.subjects = {}
+        self.today_topics = []
+        self.completed_topics = set()
+        self.progress_var = tk.DoubleVar(value=0)
 
-title_label = tk.Label(root, text="📚 Study Schedule Generator", font=("Helvetica", 18, "bold"))
-title_label.pack(pady=10)
+        # UI Layout
+        self.setup_ui()
 
-# Subject input
-subject_label = tk.Label(root, text="Enter Subject Name:")
-subject_label.pack()
-subject_entry = tk.Entry(root, width=40)
-subject_entry.pack(pady=5)
+        # Start thread to reset progress at 8AM
+        self.schedule_reset_check()
 
-# Topics input
-topics_label = tk.Label(root, text="Enter Topics (comma-separated):")
-topics_label.pack()
-topics_entry = tk.Entry(root, width=40)
-topics_entry.pack(pady=5)
+    def setup_ui(self):
+        tk.Label(self.root, text="📚 Study Schedule Generator", font=("Helvetica", 16, "bold")).pack(pady=10)
 
-# Display added subjects
-added_text = tk.Text(root, height=6, width=60)
-added_text.pack(pady=10)
+        self.subject_entry = tk.Entry(self.root, width=40)
+        self.subject_entry.insert(0, "Enter Subject Name")
+        self.subject_entry.pack(pady=5)
 
-study_data = []
+        self.topic_entry = tk.Entry(self.root, width=40)
+        self.topic_entry.insert(0, "Enter Topics (comma-separated)")
+        self.topic_entry.pack(pady=5)
 
-def add_subject():
-    subject = subject_entry.get().strip()
-    topics = topics_entry.get().strip()
+        self.output_display = tk.Text(self.root, height=5, width=60)
+        self.output_display.pack(pady=10)
 
-    if subject and topics:
-        topic_list = [t.strip() for t in topics.split(",")]
-        study_data.append((subject, topic_list))
-        added_text.insert(tk.END, f"{subject}: {', '.join(topic_list)}\n")
-        subject_entry.delete(0, tk.END)
-        topics_entry.delete(0, tk.END)
+        self.progress_label = tk.Label(self.root, text="Daily Progress")
+        self.progress_label.pack()
+        self.progress = tk.Scale(self.root, variable=self.progress_var, from_=0, to=100, orient="horizontal", length=300, state="disabled")
+        self.progress.pack()
 
-add_button = tk.Button(root, text="Add Subject & Topics", command=add_subject)
-add_button.pack(pady=10)
+        tk.Button(self.root, text="Add Subject & Topics", command=self.add_subject_topics).pack(pady=5)
 
-# Exam timeline inputs
-days_label = tk.Label(root, text="How many days until your exam?")
-days_label.pack()
-days_entry = tk.Entry(root, width=20)
-days_entry.pack(pady=5)
+        tk.Label(self.root, text="Days until exam:").pack()
+        self.days_entry = tk.Entry(self.root)
+        self.days_entry.pack()
 
-hours_label = tk.Label(root, text="How many hours can you study per day?")
-hours_label.pack()
-hours_entry = tk.Entry(root, width=20)
-hours_entry.pack(pady=5)
+        tk.Label(self.root, text="Hours per day:").pack()
+        self.hours_entry = tk.Entry(self.root)
+        self.hours_entry.pack()
 
-# Output box for schedule
-output_text = tk.Text(root, height=12, width=70)
-output_text.pack(pady=10)
+        tk.Button(self.root, text="Generate Schedule", command=self.generate_schedule).pack(pady=10)
 
-def generate_plan():
-    output_text.delete(1.0, tk.END)
+        self.checklist_frame = tk.LabelFrame(self.root, text="Checklist for Today's Topics")
+        self.checklist_frame.pack(fill="both", expand=True, padx=20, pady=10)
 
-    try:
-        total_days = int(days_entry.get())
-        hours_per_day = int(hours_entry.get())
-    except ValueError:
-        output_text.insert(tk.END, "Please enter valid numbers for days and hours.")
-        return
+    def add_subject_topics(self):
+        subject = self.subject_entry.get().strip()
+        topics = [t.strip() for t in self.topic_entry.get().split(",") if t.strip()]
+        if subject and topics:
+            self.subjects[subject] = topics
+            self.output_display.insert(tk.END, f"{subject}: {', '.join(topics)}\n")
+            self.subject_entry.delete(0, tk.END)
+            self.topic_entry.delete(0, tk.END)
+        else:
+            messagebox.showerror("Input Error", "Please enter both subject and topics.")
 
-    all_topics = []
-    for subject, topics in study_data:
-        for topic in topics:
-            all_topics.append((subject, topic))
+    def generate_schedule(self):
+        try:
+            total_days = int(self.days_entry.get())
+            hours_per_day = float(self.hours_entry.get())
+        except ValueError:
+            messagebox.showerror("Input Error", "Please enter valid numbers for days and hours.")
+            return
 
-    if total_days == 0:
-        output_text.insert(tk.END, "You must have at least 1 day until the exam.")
-        return
+        # Flat list of all topics
+        all_topics = [(s, t) for s, topics in self.subjects.items() for t in topics]
+        total_topics = len(all_topics)
+        topics_per_day = max(1, total_topics // total_days)
 
-    topics_per_day = max(1, len(all_topics) // total_days)
-    schedule = []
-    idx = 0
+        # Today's topics
+        self.today_topics = all_topics[:topics_per_day]
+        self.completed_topics.clear()
+        self.refresh_checklist()
 
-    for day in range(1, total_days + 1):
-        today = []
-        for _ in range(topics_per_day):
-            if idx < len(all_topics):
-                today.append(all_topics[idx])
-                idx += 1
-        schedule.append(today)
+    def refresh_checklist(self):
+        for widget in self.checklist_frame.winfo_children():
+            widget.destroy()
 
-    while idx < len(all_topics):
-        schedule[idx % total_days].append(all_topics[idx])
-        idx += 1
+        for subject, topic in self.today_topics:
+            var = tk.IntVar()
+            cb = tk.Checkbutton(
+                self.checklist_frame, text=f"{subject}: {topic}", variable=var,
+                command=lambda s=subject, t=topic, v=var: self.update_progress(s, t, v)
+            )
+            cb.pack(anchor='w')
 
-    output_text.insert(tk.END, "📆 Your Study Plan:\n\n")
-    for i, day in enumerate(schedule):
-        output_text.insert(tk.END, f"Day {i+1}:\n")
-        for subject, topic in day:
-            output_text.insert(tk.END, f"  - {subject}: {topic}\n")
-        output_text.insert(tk.END, "\n")
+    def update_progress(self, subject, topic, var):
+        if var.get():
+            self.completed_topics.add((subject, topic))
+        else:
+            self.completed_topics.discard((subject, topic))
 
-generate_button = tk.Button(root, text="Generate Plan", command=generate_plan, bg="green", fg="white", padx=10, pady=5)
-generate_button.pack(pady=10)
+        if self.today_topics:
+            percent_complete = (len(self.completed_topics) / len(self.today_topics)) * 100
+            self.progress_var.set(percent_complete)
 
-# Bring window to front
-print("✅ Full app running!")
-root.lift()
-root.attributes('-topmost', True)
-root.after_idle(root.attributes, '-topmost', False)
+    def schedule_reset_check(self):
+        def reset_loop():
+            while True:
+                now = datetime.now()
+                next_reset = now.replace(hour=8, minute=0, second=0, microsecond=0)
+                if now >= next_reset:
+                    next_reset += timedelta(days=1)
 
-root.mainloop()
+                delay = (next_reset - now).total_seconds()
+                threading.Timer(delay, self.reset_daily_progress).start()
+                break
+
+        threading.Thread(target=reset_loop, daemon=True).start()
+
+    def reset_daily_progress(self):
+        self.progress_var.set(0)
+        self.completed_topics.clear()
+        self.refresh_checklist()
+        self.schedule_reset_check()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = StudyScheduleApp(root)
+    root.mainloop()
