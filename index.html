@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>📚 Study Schedule Generator</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -15,8 +14,6 @@
       <div class="logo">📚 Study Planner</div>
       <ul>
         <li><a href="#features">Features</a></li>
-        <li><a href="#checklist">Checklist</a></li>
-        <li><a href="#progress">Progress</a></li>
         <li><a href="#download">Download</a></li>
       </ul>
     </nav>
@@ -27,11 +24,6 @@
     <h1>Study Schedule Generator</h1>
     <p>A smart desktop app for students to automatically generate a personalized study plan before exams.</p>
   </section>
-
-  <!-- Screenshot Section -->
-  <div class="screenshot" style="text-align: center; margin-top: 2rem;">
-    <img src="screenshot.png" alt="App Screenshot" style="width: 90%; max-width: 500px; border-radius: 12px; box-shadow: 0 0 12px #ccc;" />
-  </div>
 
   <!-- Features Section -->
   <section id="features">
@@ -44,63 +36,11 @@
     </ul>
   </section>
 
-  <!-- Checklist Section -->
-  <section id="checklist">
-    <h2>📋 Topic Checklist</h2>
-    <ul id="topics-list">
-      <li><input type="checkbox" /> Math - Integration</li>
-      <li><input type="checkbox" /> Physics - Kinematics</li>
-      <li><input type="checkbox" /> Chemistry - Organic</li>
-      <li><input type="checkbox" /> Computer - OOP</li>
-    </ul>
-  </section>
-
-  <!-- Bar Graph Section -->
-  <section id="progress">
-    <h2>📈 Daily Progress</h2>
-    <canvas id="progressChart" width="400" height="200"></canvas>
-  </section>
-
   <!-- Download Section -->
   <section id="download">
     <h2>⬇ Download the App</h2>
     <a class="download-button" href="study.exe" download>Download for Windows</a>
   </section>
-
-  <!-- Chart Script -->
-  <script>
-    const ctx = document.getElementById('progressChart').getContext('2d');
-    const progressChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-        datasets: [{
-          label: 'Hours Studied',
-          data: [2, 3, 1.5, 4, 2.5],
-          backgroundColor: '#4CAF50',
-          borderRadius: 5
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Hours'
-            }
-          },
-          x: {
-            title: {
-              display: true,
-              text: 'Day'
-            }
-          }
-        }
-      }
-    });
-  </script>
 
 </body>
 </html>
