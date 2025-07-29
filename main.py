@@ -6,7 +6,7 @@ import threading
 class StudyScheduleApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Study Schedule Generator")
+        self.root.title("Planpal-Study Schedule Generator")
         self.subjects = {}
         self.today_topics = []
         self.completed_topics = set()
